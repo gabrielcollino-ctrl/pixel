@@ -18,6 +18,7 @@ AUTHORIZED_USER_IDS = [
 ]
 
 CEO_ROLE_ID = 1488696715627204688
+SUPORTE_ROLE_ID = 1510283520126226583
 TICKET_CATEGORY_NAME = 'tickets'
 
 ticket_estado = {}
@@ -57,10 +58,13 @@ def build_status_embed(online, guild):
 
 async def notificar_equipe(channel, member, tipo):
     guild = channel.guild
-    role = guild.get_role(CEO_ROLE_ID)
     mencoes = ''
-    if role:
-        mencoes += role.mention + ' '
+    ceo_role = guild.get_role(CEO_ROLE_ID)
+    if ceo_role:
+        mencoes += ceo_role.mention + ' '
+    suporte_role = guild.get_role(SUPORTE_ROLE_ID)
+    if suporte_role:
+        mencoes += suporte_role.mention + ' '
     for uid in AUTHORIZED_USER_IDS:
         user = guild.get_member(uid)
         if user:
@@ -142,6 +146,9 @@ class AbrirTicketView(discord.ui.View):
         ceo_role = guild.get_role(CEO_ROLE_ID)
         if ceo_role:
             overwrites[ceo_role] = discord.PermissionOverwrite(read_messages=True, send_messages=True)
+        suporte_role = guild.get_role(SUPORTE_ROLE_ID)
+        if suporte_role:
+            overwrites[suporte_role] = discord.PermissionOverwrite(read_messages=True, send_messages=True)
         for uid in AUTHORIZED_USER_IDS:
             user = guild.get_member(uid)
             if user:
@@ -226,7 +233,15 @@ async def on_ready():
 
 
 def is_authorized(interaction):
-    return interaction.user.id in AUTHORIZED_USER_IDS
+    if interaction.user.id in AUTHORIZED_USER_IDS:
+        return True
+    if interaction.guild:
+        member = interaction.guild.get_member(interaction.user.id)
+        if member:
+            role_ids = [r.id for r in member.roles]
+            if CEO_ROLE_ID in role_ids or SUPORTE_ROLE_ID in role_ids:
+                return True
+    return False
 
 
 async def send_status_to_guild(guild, online):
