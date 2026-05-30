@@ -27,11 +27,11 @@ loja_online = False
 def get_saudacao():
     hora = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=-3))).hour
     if 1 <= hora <= 11:
-        return '🌅 Bom dia! Tudo bem?\n\nSeja bem-vindo(a)! 😊\nSou o atendimento da BG Store!\n\nEscolha o tipo de servico abaixo 👇'
+        return '🌅 Bom dia! Tudo bem?\n\nSeja bem-vindo(a)! 😊\nSou o atendimento da Pixel Store!\n\nEscolha o tipo de servico abaixo 👇'
     elif 12 <= hora <= 17:
-        return '☀️ Boa tarde! Tudo certo?\n\nSeja bem-vindo(a)! 😄\nSou o atendimento da BG Store!\n\nEscolha o tipo de servico abaixo 👇'
+        return '☀️ Boa tarde! Tudo certo?\n\nSeja bem-vindo(a)! 😄\nSou o atendimento da Pixel Store!\n\nEscolha o tipo de servico abaixo 👇'
     else:
-        return '🌙 Boa noite! Tudo bem?\n\nSeja bem-vindo(a)! 😊\nSou o atendimento da BG Store!\n\nEscolha o tipo de servico abaixo 👇'
+        return '🌙 Boa noite! Tudo bem?\n\nSeja bem-vindo(a)! 😊\nSou o atendimento da Pixel Store!\n\nEscolha o tipo de servico abaixo 👇'
 
 
 def build_status_embed(online, guild):
@@ -40,13 +40,13 @@ def build_status_embed(online, guild):
     if online:
         icon = '🟢'
         text = 'Loja Online'
-        desc = 'A **BG Store** esta aberta e pronta para atender!'
-        footer = 'BG Store - Online | ' + hora_br
+        desc = 'A **Pixel Store** esta aberta e pronta para atender!'
+        footer = 'Pixel Store - Online | ' + hora_br
     else:
         icon = '🔴'
         text = 'Loja Offline'
-        desc = 'A **BG Store** esta temporariamente fechada.\nVolte em breve!'
-        footer = 'BG Store - Offline | ' + hora_br
+        desc = 'A **Pixel Store** esta temporariamente fechada.\nVolte em breve!'
+        footer = 'Pixel Store - Offline | ' + hora_br
     embed = discord.Embed(title=icon + '  ' + text, description=desc, color=0x9B59B6)
     embed.add_field(name='👥  Membros', value='**' + str(member_count) + '** membros', inline=True)
     embed.add_field(name='🛒  Servicos', value='**Build - Script - Performance**', inline=True)
@@ -81,7 +81,7 @@ class TipoServicoView(discord.ui.View):
             description='Voce escolheu **Discord**!\n\nDescreva o que precisa em **uma unica mensagem** e nossa equipe vai te atender em breve! 😊',
             color=0x9B59B6
         )
-        embed.set_footer(text='BG Store - Aguarde um momento!')
+        embed.set_footer(text='Pixel Store - Aguarde um momento!')
         await interaction.response.send_message(embed=embed)
         await notificar_equipe(interaction.channel, interaction.user, 'Discord')
 
@@ -95,7 +95,7 @@ class TipoServicoView(discord.ui.View):
             description='Voce escolheu **Consultoria de Marketing**!\n\nDescreva o que precisa em **uma unica mensagem** e nossa equipe vai te atender em breve! 😊',
             color=0x9B59B6
         )
-        embed.set_footer(text='BG Store - Aguarde um momento!')
+        embed.set_footer(text='Pixel Store - Aguarde um momento!')
         await interaction.response.send_message(embed=embed)
         await notificar_equipe(interaction.channel, interaction.user, 'Consultoria Marketing')
 
@@ -109,7 +109,7 @@ class TipoServicoView(discord.ui.View):
             description='Voce escolheu **Build Roblox**!\n\nDescreva o que precisa em **uma unica mensagem** e nossa equipe vai te atender em breve! 😊',
             color=0x9B59B6
         )
-        embed.set_footer(text='BG Store - Aguarde um momento!')
+        embed.set_footer(text='Pixel Store - Aguarde um momento!')
         await interaction.response.send_message(embed=embed)
         await notificar_equipe(interaction.channel, interaction.user, 'Build Roblox')
 
@@ -149,11 +149,11 @@ class AbrirTicketView(discord.ui.View):
             'horario': datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=-3))).strftime('%d/%m/%Y %H:%M'),
         }
         embed_bv = discord.Embed(
-            title='👋  Bem-vindo(a) a BG Store!',
+            title='👋  Bem-vindo(a) a Pixel Store!',
             description=get_saudacao(),
             color=0x9B59B6
         )
-        embed_bv.set_footer(text='BG Store - Build • Script • Performance')
+        embed_bv.set_footer(text='Pixel Store - Build • Script • Performance')
         await channel.send(embed=embed_bv, view=TipoServicoView())
         await channel.send(view=FecharTicketView())
         await interaction.response.send_message('Ticket aberto! ' + channel.mention, ephemeral=True)
@@ -180,7 +180,7 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 tree = bot.tree
 
 
-@tasks.loop(minutes=1)
+@tasks.loop(minutes=5)
 async def atualizar_status():
     global status_message_id, loja_online
     guild = bot.get_guild(GUILD_ID)
@@ -211,7 +211,7 @@ async def on_ready():
         print(str(len(synced)) + ' comandos sincronizados')
     except Exception as e:
         print('Erro: ' + str(e))
-    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name='BG Store'))
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name='Pixel Store'))
 
 
 def is_authorized(interaction):
@@ -240,7 +240,7 @@ async def update_or_send_status(interaction, online):
     await interaction.response.send_message('Loja definida!', ephemeral=True)
 
 
-@tree.command(name='lojaon', description='Coloca a BG Store como ONLINE')
+@tree.command(name='lojaon', description='Coloca a Pixel Store como ONLINE')
 async def lojaon(interaction: discord.Interaction):
     if not is_authorized(interaction):
         await interaction.response.send_message('Voce nao tem permissao.', ephemeral=True)
@@ -248,7 +248,7 @@ async def lojaon(interaction: discord.Interaction):
     await update_or_send_status(interaction, online=True)
 
 
-@tree.command(name='lojaoff', description='Coloca a BG Store como OFFLINE')
+@tree.command(name='lojaoff', description='Coloca a Pixel Store como OFFLINE')
 async def lojaoff(interaction: discord.Interaction):
     if not is_authorized(interaction):
         await interaction.response.send_message('Voce nao tem permissao.', ephemeral=True)
@@ -256,7 +256,7 @@ async def lojaoff(interaction: discord.Interaction):
     await update_or_send_status(interaction, online=False)
 
 
-@tree.command(name='status', description='Mostra o status atual da BG Store')
+@tree.command(name='status', description='Mostra o status atual da Pixel Store')
 async def status_cmd(interaction: discord.Interaction):
     embed = build_status_embed(loja_online, interaction.guild)
     await interaction.response.send_message(embed=embed, ephemeral=True)
@@ -268,12 +268,12 @@ async def atendimento(interaction: discord.Interaction):
         await interaction.response.send_message('Voce nao tem permissao.', ephemeral=True)
         return
     embed = discord.Embed(
-        title='🛒  BG Store - Atendimento',
+        title='🛒  Pixel Store - Atendimento',
         description='Clique no botao abaixo para abrir um ticket!\n\nFazemos **encomendas** de builds, scripts, mapas e muito mais para **Roblox Studio**.',
         color=0x9B59B6
     )
     embed.add_field(name='⚡  Diferenciais', value='✅ Entrega rapida\n✅ Fotos do andamento\n✅ Qualidade profissional\n✅ Precos acessiveis', inline=False)
-    embed.set_footer(text='BG Store - Build • Script • Performance')
+    embed.set_footer(text='Pixel Store - Build • Script • Performance')
     await interaction.response.send_message(embed=embed, view=AbrirTicketView())
 
 
@@ -286,12 +286,12 @@ async def aceitar(interaction: discord.Interaction, item: str, preco: str):
     if not interaction.channel.name.startswith('ticket-'):
         await interaction.response.send_message('Use este comando dentro de um ticket!', ephemeral=True)
         return
-    embed = discord.Embed(title='✅  Pedido Aceito!', description='Seu pedido foi **aceito** pela equipe da BG Store!\n\nAssim que recebermos o pagamento, iniciamos a producao! 🚀', color=0x57F287)
+    embed = discord.Embed(title='✅  Pedido Aceito!', description='Seu pedido foi **aceito** pela equipe da Pixel Store!\n\nAssim que recebermos o pagamento, iniciamos a producao! 🚀', color=0x57F287)
     embed.add_field(name='📦  Item', value=item, inline=True)
     embed.add_field(name='💰  Valor', value='R$' + preco, inline=True)
     embed.add_field(name='🔑  Chave PIX', value='`' + PIX + '`', inline=False)
     embed.add_field(name='📸  Proximo passo', value='Faca o PIX e envie o **comprovante como imagem** aqui no ticket!', inline=False)
-    embed.set_footer(text='BG Store - Obrigado pela preferencia!')
+    embed.set_footer(text='Pixel Store - Obrigado pela preferencia!')
     await interaction.response.send_message(embed=embed)
 
 
@@ -305,7 +305,7 @@ async def recusar(interaction: discord.Interaction, motivo: str):
         await interaction.response.send_message('Use este comando dentro de um ticket!', ephemeral=True)
         return
     embed = discord.Embed(title='❌  Pedido Recusado', description='Infelizmente nao foi possivel aceitar seu pedido no momento.\n\n**Motivo:** ' + motivo + '\n\nSe tiver duvidas, entre em contato com nossa equipe!', color=0xED4245)
-    embed.set_footer(text='BG Store - Agradecemos o contato!')
+    embed.set_footer(text='Pixel Store - Agradecemos o contato!')
     await interaction.response.send_message(embed=embed)
 
 
@@ -320,7 +320,7 @@ async def emproducao(interaction: discord.Interaction, previsao: str):
         return
     embed = discord.Embed(title='⚙️  Pedido em Producao!', description='Seu pedido esta sendo produzido com muito cuidado!\n\nVamos te mandar fotos do andamento em breve 📸', color=0xF1C40F)
     embed.add_field(name='⏰  Previsao de Entrega', value=previsao, inline=False)
-    embed.set_footer(text='BG Store - Qualidade e capricho em cada detalhe!')
+    embed.set_footer(text='Pixel Store - Qualidade e capricho em cada detalhe!')
     await interaction.response.send_message(embed=embed)
 
 
@@ -332,8 +332,8 @@ async def entregue(interaction: discord.Interaction):
     if not interaction.channel.name.startswith('ticket-'):
         await interaction.response.send_message('Use este comando dentro de um ticket!', ephemeral=True)
         return
-    embed = discord.Embed(title='📦  Pedido Entregue!', description='Seu pedido foi **entregue** com sucesso! 🎉\n\nEsperamos que tenha gostado! Se precisar de ajustes ou tiver duvidas, fale com a gente aqui no ticket.\n\n**Obrigado por escolher a BG Store!** 🟣', color=0x57F287)
-    embed.set_footer(text='BG Store - Build • Script • Performance')
+    embed = discord.Embed(title='📦  Pedido Entregue!', description='Seu pedido foi **entregue** com sucesso! 🎉\n\nEsperamos que tenha gostado! Se precisar de ajustes ou tiver duvidas, fale com a gente aqui no ticket.\n\n**Obrigado por escolher a Pixel Store!** 🟣', color=0x57F287)
+    embed.set_footer(text='Pixel Store - Build • Script • Performance')
     await interaction.response.send_message(embed=embed)
 
 
