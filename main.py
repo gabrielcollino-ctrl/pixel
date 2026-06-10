@@ -415,7 +415,8 @@ async def atendimento(interaction: discord.Interaction):
     )
     embed.add_field(name='⚡  Diferenciais', value='✅ Entrega rapida\n✅ Fotos do andamento\n✅ Qualidade profissional\n✅ Precos acessiveis', inline=False)
     embed.set_footer(text='Pixel Store - Build • Script • Performance')
-    await interaction.response.send_message(embed=embed, view=AbrirTicketView())
+    await interaction.channel.send(embed=embed, view=AbrirTicketView())
+    await interaction.response.send_message('Painel enviado!', ephemeral=True)
 
 
 @tree.command(name='aceitar', description='Aceita o pedido do cliente no ticket')
